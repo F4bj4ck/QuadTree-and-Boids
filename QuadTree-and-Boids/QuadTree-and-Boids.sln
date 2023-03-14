@@ -1,0 +1,14 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuadTree-and-Boids", "QuadTree-and-Boids\QuadTree-and-Boids.vcxproj", "{BAA94DB9-FF8E-4C00-A9A5-BF94E33C0E34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAA94DB9-FF8E-4C00-A9A5-BF94E33C0E34}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{BAA94DB9-FF8E-4C00-A9A5-BF94E33C0E34}.Debug|Any CPU.Build.0 = Debug|x64
+	EndGlobalSection
+EndGlobal
