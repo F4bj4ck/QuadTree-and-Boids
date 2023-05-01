@@ -2,7 +2,7 @@
 
 QuadTree::QuadTree(AABB boundary, int capacity) : m_capacity(capacity), m_boundary(boundary)
 {
-    m_points = std::vector<Point>(m_capacity);
+    
 }
 
 QuadTree::~QuadTree()
@@ -13,7 +13,7 @@ QuadTree::~QuadTree()
     delete m_southEast;
 }
 
-bool QuadTree::Insert(Point point)
+bool QuadTree::Insert(Point& point)
 {
     if (!m_boundary.ContainsPoint(point))
     {
@@ -51,14 +51,74 @@ bool QuadTree::Insert(Point point)
     return false;
 }
 
-std::vector<Point> QuadTree::QueryRange(AABB range)
+std::vector<Point> QuadTree::QueryRange(AABB& range)
 {
+    std::vector<Point> pointsInRange;
+
+    if(!m_boundary.IntersectsAABB(range))
+    {
+        return pointsInRange;
+    }
+
+    for (int p = 0; p < static_cast<int>(m_points.size()); p++)
+    {
+        if(range.ContainsPoint(m_points[p]))
+        {
+            pointsInRange.push_back(m_points[p]);
+        }
+    }
+
+    if(!m_subdivided)
+    {
+        return pointsInRange;
+    }
+
+    std::vector<Point> pointsInChild = m_northWest->QueryRange(range);
+    pointsInRange.insert(pointsInRange.end(), pointsInChild.begin(), pointsInChild.end());
     
+    pointsInChild = m_northEast->QueryRange(range);
+    pointsInRange.insert(pointsInRange.end(), pointsInChild.begin(), pointsInChild.end());
+    
+    pointsInChild = m_southWest->QueryRange(range);
+    pointsInRange.insert(pointsInRange.end(), pointsInChild.begin(), pointsInChild.end());
+    
+    pointsInChild = m_southEast->QueryRange(range);
+    pointsInRange.insert(pointsInRange.end(), pointsInChild.begin(), pointsInChild.end());
+    
+    return pointsInRange;
+}
+
+std::vector<AABB> QuadTree::GetBoundaries()
+{
+    std::vector<AABB> boundaries;
+
+    boundaries.push_back(m_boundary);
+
+    if (!m_subdivided)
+    {
+        return boundaries;
+    }
+
+    std::vector<AABB> childBoundaries = m_northWest->GetBoundaries();
+    boundaries.insert(boundaries.end(), childBoundaries.begin(), childBoundaries.end());
+    
+    childBoundaries = m_northEast->GetBoundaries();
+    boundaries.insert(boundaries.end(), childBoundaries.begin(), childBoundaries.end());
+    
+    childBoundaries = m_southWest->GetBoundaries();
+    boundaries.insert(boundaries.end(), childBoundaries.begin(), childBoundaries.end());
+    
+    childBoundaries = m_southEast->GetBoundaries();
+    boundaries.insert(boundaries.end(), childBoundaries.begin(), childBoundaries.end());
+
+    return boundaries;
 }
 
 
 void QuadTree::Subdivide()
 {
+    m_subdivided = true;
+    
     Point northWestCenter;
     northWestCenter.x = m_boundary.center.x - m_boundary.halfWidth / 2;
     northWestCenter.y = m_boundary.center.y - m_boundary.halfHeight / 2;

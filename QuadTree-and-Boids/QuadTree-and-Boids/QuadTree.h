@@ -13,7 +13,7 @@ struct AABB
     float halfWidth;
     float halfHeight;
 
-    bool ContainsPoint(Point point)
+    bool ContainsPoint(Point& point)
     {
         return point.x > center.x - halfWidth &&
                point.x < center.x + halfWidth &&
@@ -21,7 +21,7 @@ struct AABB
                point.y < center.y + halfHeight;    
     }
     
-    bool IntersectsAABB(AABB other)
+    bool IntersectsAABB(AABB& other)
     {
         return !(other.center.x - other.halfWidth > center.x + halfWidth ||
                  other.center.x + other.halfWidth < center.x - halfWidth ||
@@ -36,8 +36,9 @@ class QuadTree
 public:
     QuadTree(AABB boundary, int capacity);
     ~QuadTree();
-    bool Insert(Point point);
-    std::vector<Point> QueryRange(AABB range);
+    bool Insert(Point& point);
+    std::vector<Point> QueryRange(AABB& range);
+    std::vector<AABB> GetBoundaries();
     
 private:
     int m_capacity;
