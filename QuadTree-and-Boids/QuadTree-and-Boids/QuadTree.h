@@ -1,11 +1,6 @@
 ﻿#pragma once
 #include <vector>
-
-struct Point
-{
-    float x;
-    float y;
-};
+#include "Boid.h"
 
 struct AABB
 {
@@ -13,12 +8,12 @@ struct AABB
     float halfWidth;
     float halfHeight;
 
-    bool ContainsPoint(Point& point)
+    bool ContainsPoint(Boid* boid)
     {
-        return point.x > center.x - halfWidth &&
-               point.x < center.x + halfWidth &&
-               point.y > center.y - halfHeight &&
-               point.y < center.y + halfHeight;    
+        return boid->GetPosition().x > center.x - halfWidth &&
+               boid->GetPosition().x < center.x + halfWidth &&
+               boid->GetPosition().y > center.y - halfHeight &&
+               boid->GetPosition().y < center.y + halfHeight;    
     }
     
     bool IntersectsAABB(AABB& other)
@@ -36,14 +31,14 @@ class QuadTree
 public:
     QuadTree(AABB boundary, int capacity);
     ~QuadTree();
-    bool Insert(Point& point);
-    std::vector<Point> QueryRange(AABB& range);
+    bool Insert(Boid* boid);
+    std::vector<Boid*> QueryRange(AABB& range);
     std::vector<AABB> GetBoundaries();
     
 private:
     int m_capacity;
     AABB m_boundary;
-    std::vector<Point> m_points;
+    std::vector<Boid*> m_boids;
     bool m_subdivided = false;
 
     QuadTree* m_northWest;

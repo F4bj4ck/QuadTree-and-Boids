@@ -11,10 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Boid.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QuadTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Boid.h" />
     <ClInclude Include="QuadTree.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

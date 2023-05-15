@@ -13,16 +13,16 @@ QuadTree::~QuadTree()
     delete m_southEast;
 }
 
-bool QuadTree::Insert(Point& point)
+bool QuadTree::Insert(Boid* boid)
 {
-    if (!m_boundary.ContainsPoint(point))
+    if (!m_boundary.ContainsPoint(boid))
     {
         return false;
     }
 
-    if (static_cast<int>(m_points.size()) < m_capacity && !m_subdivided)
+    if (static_cast<int>(m_boids.size()) < m_capacity && !m_subdivided)
     {
-        m_points.push_back(point);
+        m_boids.push_back(boid);
         return true;
     }
 
@@ -31,19 +31,19 @@ bool QuadTree::Insert(Point& point)
         Subdivide();
     }
 
-    if(m_northWest->Insert(point))
+    if(m_northWest->Insert(boid))
     {
         return true;
     }
-    if(m_northEast->Insert(point))
+    if(m_northEast->Insert(boid))
     {
         return true;
     }
-    if(m_southWest->Insert(point))
+    if(m_southWest->Insert(boid))
     {
         return true;
     }
-    if(m_southEast->Insert(point))
+    if(m_southEast->Insert(boid))
     {
         return true;
     }
@@ -51,20 +51,20 @@ bool QuadTree::Insert(Point& point)
     return false;
 }
 
-std::vector<Point> QuadTree::QueryRange(AABB& range)
+std::vector<Boid*> QuadTree::QueryRange(AABB& range)
 {
-    std::vector<Point> pointsInRange;
+    std::vector<Boid*> pointsInRange;
 
     if(!m_boundary.IntersectsAABB(range))
     {
         return pointsInRange;
     }
 
-    for (int p = 0; p < static_cast<int>(m_points.size()); p++)
+    for (int p = 0; p < static_cast<int>(m_boids.size()); p++)
     {
-        if(range.ContainsPoint(m_points[p]))
+        if(range.ContainsPoint(m_boids[p]))
         {
-            pointsInRange.push_back(m_points[p]);
+            pointsInRange.push_back(m_boids[p]);
         }
     }
 
@@ -73,7 +73,7 @@ std::vector<Point> QuadTree::QueryRange(AABB& range)
         return pointsInRange;
     }
 
-    std::vector<Point> pointsInChild = m_northWest->QueryRange(range);
+    std::vector<Boid*> pointsInChild = m_northWest->QueryRange(range);
     pointsInRange.insert(pointsInRange.end(), pointsInChild.begin(), pointsInChild.end());
     
     pointsInChild = m_northEast->QueryRange(range);
