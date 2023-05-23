@@ -162,6 +162,26 @@ void QuadTree::Subdivide()
     southEastBoundary.halfHeight = m_boundary.halfHeight / 2;
 
     m_southEast = new QuadTree(southEastBoundary, m_capacity);
+
+    for (auto& boid : m_boids)
+    {
+        if(m_northWest->Insert(boid))
+        {
+            continue;
+        }
+        if(m_northEast->Insert(boid))
+        {
+            continue;
+        }
+        if(m_southWest->Insert(boid))
+        {
+            continue;
+        }
+        if(m_southEast->Insert(boid))
+        {
+            continue;
+        }
+    }
 }
 
 
