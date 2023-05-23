@@ -182,6 +182,8 @@ void QuadTree::Subdivide()
             continue;
         }
     }
+    
+    m_boids.clear();
 }
 
 
